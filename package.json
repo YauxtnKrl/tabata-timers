@@ -9,7 +9,7 @@
     "gh-pages-deploy": "node scripts/gh-pages-deploy.js"
   },
   "dependencies": {
-    "ajv": "^6.12.6",
+    "ajv": "^8.11.0",
     "core-js": "^3.8.3",
     "vue": "^3.2.13"
   },

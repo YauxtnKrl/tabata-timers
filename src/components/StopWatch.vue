@@ -24,9 +24,6 @@ export default {
     function stopTimer(interval) {
       clearInterval(interval);
     }
-    function convertToTime(seconds) {
-      console.log(seconds);
-    }
     return {
       state,
       startTimer,

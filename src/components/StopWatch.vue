@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 
 export default {
   setup() {
@@ -18,6 +18,7 @@ export default {
     const timerLimit = ref(0);
 
     function startTimer() {
+      state.startEnabled = false;
       var start = Date.now();
 
       console.log("input is: " + state.timers.timer);
@@ -32,6 +33,7 @@ export default {
 
         if (delta >= end) {
           clearInterval(state.interval);
+          state.startEnabled = true;
           console.log("Complete");
         }
       }, 10);
@@ -39,11 +41,13 @@ export default {
 
     function stopTimer() {
       clearInterval(state.interval);
+      state.startEnabled = true;
     }
     return {
       state,
       startTimer,
       stopTimer,
+      timerLimit,
     };
   },
 };

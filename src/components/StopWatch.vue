@@ -1,7 +1,12 @@
 <template>
   <p>{{ state.timer }}</p>
   <button @click="startTimer">Start</button>
-  <button @click="stopTimer(state.interval)">Stop</button>
+  <button @click="stopTimer(interval)">Stop</button>
+  <form action="">
+    <label for="Mins">Seconds</label>
+    <input v-model="state.timers.timer" id="Mins" />
+    <label for="Seceonds">Seconds</label>
+  </form>
 </template>
 
 <script>
@@ -9,20 +14,31 @@ import { reactive } from "vue";
 
 export default {
   setup() {
-    const state = reactive({ timer: 12 }, { timeLimit: 5 }, { interval: "" });
+    const state = reactive({ timers: { timer: 0 }, interval: 0, startEnabled: true });
+    const timerLimit = ref(0);
 
     function startTimer() {
-      state.interval = setInterval(() => {
-        if (this.timer == 0) {
-          clearInterval(this.in);
-        } else {
-          state.timer--;
+      var start = Date.now();
+
+      console.log("input is: " + state.timers.timer);
+      var end = start + state.timers.timer * 1000;
+      // console.log(start);
+
+      state.interval = setInterval(function () {
+        var delta = Date.now();
+
+        console.log("now: " + delta);
+        console.log("end: " + end);
+
+        if (delta >= end) {
+          clearInterval(state.interval);
+          console.log("Complete");
         }
-      }, 1000);
+      }, 10);
     }
 
-    function stopTimer(interval) {
-      clearInterval(interval);
+    function stopTimer() {
+      clearInterval(state.interval);
     }
     return {
       state,

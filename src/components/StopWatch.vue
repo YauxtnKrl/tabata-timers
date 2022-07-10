@@ -1,56 +1,55 @@
 <template>
-  <p>{{ state.timer }}</p>
-  <button @click="startTimer">Start</button>
-  <button @click="stopTimer(interval)">Stop</button>
+  <p>{{ timerDisplay }}</p>
+
   <form action="">
     <label for="Mins">Seconds</label>
-    <input v-model="state.timers.timer" id="Mins" />
-    <label for="Seceonds">Seconds</label>
+    <input v-model="state.timers.seconds" id="Secs" />
+    <label for="Seconds">minutes</label>
+    <input v-model="state.timers.minutes" id="Mins" />
   </form>
+
+  <button @click='startTimer' :disabled='state.startDisabled'>Start</button>
+  <button @click='stopTimer(interval)'>Stop</button>
+
 </template>
 
-<script>
+<script setup>
 import { reactive, ref } from "vue";
 
-export default {
-  setup() {
-    const state = reactive({ timers: { timer: 0 }, interval: 0, startEnabled: true });
+    const state = reactive({ timers: { seconds: 0, minutes: 0, timer: 0 }, interval: 0, startDisabled: false });
     const timerLimit = ref(0);
+    const timerDisplay = ref(0)
 
     function startTimer() {
-      state.startEnabled = false;
+      state.startDisabled = true;
+
       var start = Date.now();
 
-      console.log("input is: " + state.timers.timer);
-      var end = start + state.timers.timer * 1000;
-      // console.log(start);
+      console.log("input is: " + state.timers.minutes + " minutes " + state.timers.seconds + " seconds");
+
+      var end = start + (state.timers.minutes * 60 * 1000) + (state.timers.seconds * 1000);
+
 
       state.interval = setInterval(function () {
-        var delta = Date.now();
+        timerLimit.value = Date.now();
 
-        console.log("now: " + delta);
-        console.log("end: " + end);
+        timerDisplay.value = ((end - timerLimit.value)/1000).toFixed(2);
 
-        if (delta >= end) {
+        state.timer = timerLimit.value;
+
+        if (timerLimit.value >= end) {
           clearInterval(state.interval);
-          state.startEnabled = true;
-          console.log("Complete");
+          console.log(Date.now()-end)
+          state.startDisabled = false;
+          timerDisplay.value ="Complete";
         }
-      }, 10);
+      }, 1);
     }
 
     function stopTimer() {
       clearInterval(state.interval);
-      state.startEnabled = true;
+      state.startDisabled = false;
     }
-    return {
-      state,
-      startTimer,
-      stopTimer,
-      timerLimit,
-    };
-  },
-};
 </script>
 
 <style></style>
